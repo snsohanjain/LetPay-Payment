@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 @Controller
-@RequestMapping(path = "/api/v1")
+@RequestMapping(path = "/")
 public class TokenController {
 
     private Log logger = LogFactory.getLog(TokenController.class);
