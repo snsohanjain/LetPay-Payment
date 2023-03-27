@@ -26,13 +26,9 @@ public class PaymentController {
 
     private final String mongoAccess = "mongodb+srv://sohanjain:sohanjain@cluster0.byn9s0t.mongodb.net/?retryWrites=true&w=majority";
 
-   @GetMapping
+    @GetMapping
     public String welcomePage(){
         return "welcome";
-    }
-    @RequestMapping(value = "/pay", method = RequestMethod.POST)
-    public String getPayment(){
-        return "payments";
     }
     @GetMapping("/payment")
     public String orderPage(){

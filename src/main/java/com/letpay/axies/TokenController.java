@@ -7,6 +7,8 @@ import okhttp3.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +21,8 @@ public class TokenController {
 
     private Log logger = LogFactory.getLog(TokenController.class);
     private static final String  key = "axisbank12345678";
-
-    @PostMapping("/token")
-    void getToken() throws IOException {
-
+    @GetMapping( "/token")
+    public String getTokens(ModelMap model) throws IOException {
         String encryptedCID = EncryptionAndDecryptionMain.encrypt("6994",key);
         System.out.println("Encrypt CID  :: " + encryptedCID);
         String decryptedCID  = EncryptionAndDecryptionMain.decrypt(encryptedCID,key);
@@ -44,6 +44,7 @@ public class TokenController {
         Response response = client.newCall(request).execute();
         logger.info("LOGGER :: = TOKEN RESPONSE?");
         System.out.println(response.body().string());
-
+        model.addAttribute("token",response.body().toString());
+        return "token";
     }
 }
