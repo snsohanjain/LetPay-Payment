@@ -1,12 +1,10 @@
 package com.letpay.axies;
 
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -34,14 +34,29 @@ public class PaymentController {
     public String orderPage(){
         return "payment";
     }
-    @GetMapping("/payments/all")
-    String getAllPayments(){
+    @GetMapping("/payments/1")
+    String getAllPayments(ModelMap model){
+
         MongoClient mongoClient = MongoClients.create(mongoAccess);
         MongoDatabase database = mongoClient.getDatabase("payment");
         MongoCollection<Document> collection = database.getCollection("paysuccess");
         Document doc = collection.find(Filters.and(gte("AMT", 99), Filters.eq("customerName", "sohan"))).first();
         System.out.println(doc.toJson());
-        return doc.toJson();
+        Document doc1 = collection.find(Filters.eq("phoneNumber", "8880638514")).first();
+        System.out.println(doc1);
+        //
+        List<Document> documents = new ArrayList<>();
+        Document query = new Document("AMT", new Document("$gt", 1));
+        FindIterable<Document> iterable = collection.find(query);
+        for (Document document : iterable) {
+//            System.out.println(document);
+            documents.add(document);
+        }
+        System.out.println(documents);
+        model.addAttribute("documents", documents);
+        mongoClient.close();
+
+        return "all-payments";
     }
 
     @PostMapping("/payment")

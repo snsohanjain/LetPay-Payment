@@ -16,7 +16,6 @@
             <value>.jsp</value>
         </property>
     </bean>
-
     <mvc:annotation-driven />
 
 </beans>
