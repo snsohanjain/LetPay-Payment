@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.letpay.axies.MongoConfig.mongoAccess;
 import static com.mongodb.client.model.Filters.gte;
 
 
 @Controller
 @RequestMapping(path = "/")
 public class PaymentController {
-
-    private final String mongoAccess = "mongodb+srv://sohanjain:sohanjain@cluster0.byn9s0t.mongodb.net/?retryWrites=true&w=majority";
+    private static final String  key = "axisbank12345678";
 
     @GetMapping
     public String welcomePage(){
@@ -70,12 +70,18 @@ public class PaymentController {
                         ppi.getEmail(),ppi.getAMT()),"12345");
 
         //RESPONSE
-        System.out.println(paymentRequestPass);
+        System.out.println("USER REQUEST : " + paymentRequestPass);
+        String encryptedResponse = EncryptionAndDecryptionMain.encrypt(paymentRequestPass.toString(),key);
+        //Encrypted Response
+        System.out.println("ENCRYPTED REQUEST: " + "i="+encryptedResponse+"&");
+        //Decrypted Response
+        String decryptedResponse = EncryptionAndDecryptionMain.decrypt(encryptedResponse,key);
+        System.out.println("DECRYPTED REQUEST: " + decryptedResponse);
 
         //MONGODB
         MongoClient mongoClient = MongoClients.create(mongoAccess);
         MongoDatabase db = mongoClient.getDatabase("payment");
-        MongoCollection col = db.getCollection("paysuccess");
+        MongoCollection col = db.getCollection("allpayments");
         Map<String, Object> paymentmap = PPI.toMap(paymentRequestPass.getPPI());
         Document document = new Document(paymentmap);
         col.insertOne(document);

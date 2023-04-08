@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -22,14 +23,20 @@ public class PPI {
 
 //    PPI=LP110S|anjali|anjalim541@gmail.com|9773865014|100.55
 
-    public static Map<String, Object> toMap(PPI ppi) {
+    public static Map toMap(PPI ppi) {
+        int count = 0;
         Map<String, Object> map = new HashMap<>();
+        map.put("_id", UUID.randomUUID().hashCode());
+        map.put("localDate",ppi.getLocalDate());
+        map.put("referenceId", ppi.getReferenceId());
         map.put("customerName", ppi.getCustomerName());
         map.put("phoneNumber", ppi.getPhoneNumber());
         map.put("email", ppi.getEmail());
         map.put("AMT", ppi.getAMT());
         return map;
+
     }
+
 
 
     @Override

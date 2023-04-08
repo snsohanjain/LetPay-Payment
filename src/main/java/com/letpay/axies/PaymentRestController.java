@@ -12,18 +12,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.letpay.axies.MongoConfig.mongoAccess;
 import static com.mongodb.client.model.Filters.gte;
 
 @RestController
 @RequestMapping(path = "/")
 public class PaymentRestController {
-    private final String mongoAccess = "mongodb+srv://sohanjain:sohanjain@cluster0.byn9s0t.mongodb.net/?retryWrites=true&w=majority";
+
     @GetMapping("/payments/all")
     List<Object> getAllPayments(){
 
         MongoClient mongoClient = MongoClients.create(mongoAccess);
         MongoDatabase database = mongoClient.getDatabase("payment");
-        MongoCollection<Document> collection = database.getCollection("paysuccess");
+        MongoCollection<Document> collection = database.getCollection("allpayments");
 
         List<Document> documents = new ArrayList<>();
 
