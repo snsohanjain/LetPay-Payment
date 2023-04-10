@@ -45,10 +45,6 @@ public class PaymentRequest {
     //reserveField
     private String RE1;
 
-    public PaymentRequest(Integer CID) {
-        this.CID = CID;
-    }
-    
     @Override
     public String toString() {
         return
