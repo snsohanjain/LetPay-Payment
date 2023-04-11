@@ -1,6 +1,8 @@
 package com.letpay.axies;
 
 import com.mongodb.client.*;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +21,22 @@ import static com.letpay.axies.MongoConfig.mongoAccess;
 @RestController
 @RequestMapping(path = "/")
 public class PaymentRestController {
+    private static final Logger LOGGER = Logger.getLogger(PaymentController.class);
     @Autowired
     private PaymentService paymentService;
     @PostMapping("/payment-post")
     void createNewPayment(@RequestBody @Valid PPI ppi) throws NoSuchAlgorithmException {
-        System.out.println(ppi);
+        BasicConfigurator.configure();
+        LOGGER.info(ppi);
         paymentService.getNewPaymentOrder(ppi);
+
     }
 
     @GetMapping("/payments/all")
     public List<Document> getAllPayments(){
+
+        BasicConfigurator.configure();
+        LOGGER.info("GET ALL PAYMENTS");
 
         MongoClient mongoClient = MongoClients.create(mongoAccess);
         MongoDatabase database = mongoClient.getDatabase("payment");
@@ -47,6 +55,7 @@ public class PaymentRestController {
             documents.add(document);
         }
         mongoClient.close();
+        LOGGER.info("RETURNED ALL PAYMENTS");
         return documents;
     }
 }

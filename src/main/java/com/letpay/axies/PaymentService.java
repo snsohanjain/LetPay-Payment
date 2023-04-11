@@ -4,6 +4,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -21,9 +23,12 @@ import static com.letpay.axies.MongoConfig.mongoAccess;
 @Service
 public class PaymentService {
     private static final String  key = "axisbank12345678";
+    private static final Logger LOGGER = Logger.getLogger(PaymentController.class);
 
     @PostMapping
     String getNewPaymentOrder(PPI ppi) throws NoSuchAlgorithmException {
+        BasicConfigurator.configure();
+        LOGGER.info("CREATE A PAYMENT REQUEST");
 
         //RANDOM-VALUE
         SecureRandom random = new SecureRandom();
@@ -60,6 +65,7 @@ public class PaymentService {
         Map<String, Object> paymentmap = PPI.toMap(paymentRequestPass.getPPI());
         Document document = new Document(paymentmap);
         col.insertOne(document);
+        LOGGER.info("PAYMENT REQUEST SUCCESS STORED IN MONGODB");
         return null;
 
     }
