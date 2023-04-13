@@ -7,12 +7,9 @@ import com.mongodb.client.MongoDatabase;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -24,6 +21,8 @@ import static com.letpay.axies.MongoConfig.mongoAccess;
 public class PaymentService {
     private static final String  key = "axisbank12345678";
     private static final Logger LOGGER = Logger.getLogger(PaymentController.class);
+    @Autowired
+    private PaymentController paymentController;
 
     @PostMapping
     String getNewPaymentOrder(PPI ppi) throws NoSuchAlgorithmException {
@@ -66,6 +65,7 @@ public class PaymentService {
         Document document = new Document(paymentmap);
         col.insertOne(document);
         LOGGER.info("PAYMENT REQUEST SUCCESS STORED IN MONGODB");
+
         return null;
 
     }
