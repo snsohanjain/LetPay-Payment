@@ -60,7 +60,7 @@
             timerElement.textContent = seconds;
             if (seconds <= 0) {
                 clearInterval(timer);
-                window.location.href = 'http://localhost:8080/payment';
+                window.location.href = 'https://test.sohanjain.cloud/payment';
             }
         }, 1000);
     </script>
