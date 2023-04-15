@@ -22,7 +22,7 @@ public class PaymentRequest {
     private String RID;
     @JsonProperty("CRN")
     //uniqueCustomerReferenceNumber
-    private UUID CRN;
+    private Long CRN;
     @JsonProperty("AMT")
     //amount
     private Long AMT;

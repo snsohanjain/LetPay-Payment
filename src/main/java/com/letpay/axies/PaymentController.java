@@ -18,10 +18,13 @@ import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
 import static com.letpay.axies.MongoConfig.mongoAccess;
+import static com.letpay.axies.RandomAlphaNumeric.generateRandomNumeric;
+import static com.letpay.axies.RandomAlphaNumeric.generateRandomString;
 
 @Controller
 @RequestMapping(path = "/")
@@ -44,47 +47,57 @@ public class PaymentController {
 
     @PostMapping("/payment")
     String createNewPaymentOrder(ModelMap model, @Valid PPI ppi, BindingResult result) throws NoSuchAlgorithmException {
-
+//------------------------------------------------------------------------------------------------------
         //RANDOM-VALUE
-        SecureRandom random = new SecureRandom();
-        long randomNumber = random.nextLong() % 1000000000000000L; // Generates a random 15-digit number
-        if (randomNumber < 0) {
-            randomNumber += 1000000000000000L;
-        }
-        String randomString = Long.toString(randomNumber);
-
-        //BUSINESS LOGIC
+        String randomBNR = generateRandomString(6);
+        String randomTRN = generateRandomString(25);
+        String randomRID = generateRandomString(12);
+        Long randomCRN = generateRandomNumeric(12);
+        Long referenceId = generateRandomNumeric(12);
+//------------------------------------------------------------------------------------------------------
+        //Payment Request
         PaymentRequest paymentRequestPass = new PaymentRequest(
-                6994, UUID.randomUUID().toString(), UUID.randomUUID(),ppi.getAMT()
+                6994, randomRID, randomCRN,ppi.getAMT()
                 ,1.0,"TEST","INR", "https://www.letpay.in/pay/easypay/payment/thankyou",
-                new PPI(randomString,ppi.getCustomerName(), LocalDate.now(),ppi.getPhoneNumber(),
+                new PPI(referenceId,ppi.getCustomerName(), LocalDateTime.now(),ppi.getPhoneNumber(),
                         ppi.getEmail(),ppi.getAMT()),"12345");
 
-        //RESPONSE
-        System.out.println("USER REQUEST : " + paymentRequestPass);
+//-------------------------------------------------------------------------------------------
+        //ENCRYPTED
+        System.out.println("REQUEST : " + paymentRequestPass);
+        System.out.println();
         String encryptedResponse = EncryptionAndDecryptionMain.encrypt(paymentRequestPass.toString(),key);
         //Encrypted Response
         System.out.println("ENCRYPTED REQUEST: " + "i="+encryptedResponse+"&"+"token");
+        System.out.println();
         //Decrypted Response
         String decryptedResponse = EncryptionAndDecryptionMain.decrypt(encryptedResponse,key);
         System.out.println("DECRYPTED REQUEST: " + decryptedResponse);
+        System.out.println();
         //Checksum Response
         String checksum = EncryptionAndDecryptionMain.checkSum(encryptedResponse);
         System.out.println("Checksum Response: " + checksum);
-
+//-----------------------------------------------------------------------------------------------
+        //PAYMENT RESPONSE
+        PaymentResponse paymentResponse = new PaymentResponse(
+                randomBNR,200,"Success",randomTRN, LocalDateTime.now(),
+                "UPI",randomRID,1.0, 6994,"UPI",randomCRN,
+                "INR",paymentRequestPass.getPPI().getAMT());
+//--------------------------------------------------------------------------------------------------
         //MONGODB
         MongoClient mongoClient = MongoClients.create(mongoAccess);
         MongoDatabase db = mongoClient.getDatabase("payment");
         MongoCollection col = db.getCollection("allpayments");
-        Map<String, Object> paymentmap = PPI.toMap(paymentRequestPass.getPPI());
+
+
+        Map<String, Object> paymentmap = MongoConfig.toMap(paymentRequestPass.getPPI(),paymentResponse);
         Document document = new Document(paymentmap);
         col.insertOne(document);
         LOGGER.info("PAYMENT REQUEST SUCCESS STORED IN MONGODB");
 
-
         BasicConfigurator.configure();
         LOGGER.info("Payment Success");
-        model.addAttribute("referenceId",paymentRequestPass.getPPI().getReferenceId());
+        model.addAttribute("referenceId",paymentRequestPass.getCRN());
         model.addAttribute("amt",paymentRequestPass.getPPI().getAMT());
         model.addAttribute("customerName",paymentRequestPass.getPPI().getCustomerName());
         return "payment-success";
