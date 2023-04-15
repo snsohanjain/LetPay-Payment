@@ -13,14 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.letpay.axies.MongoConfig.mongoAccess;
 import static com.letpay.axies.RandomAlphaNumeric.generateRandomNumeric;
