@@ -8,7 +8,6 @@ import com.mongodb.client.MongoDatabase;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.bson.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -28,8 +27,6 @@ public class PaymentController {
     private static final String  key = "axisbank12345678";
 
     private static final Logger LOGGER = Logger.getLogger(PaymentController.class);
-    @Autowired
-    private PaymentService paymentService;
 
     @GetMapping
     public String welcomePage() {
