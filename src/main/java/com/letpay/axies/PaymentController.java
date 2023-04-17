@@ -40,14 +40,14 @@ public class PaymentController {
 
     @PostMapping("/payment")
     String createNewPaymentOrder(ModelMap model, @Valid PPI ppi, BindingResult result) throws NoSuchAlgorithmException {
-//------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------
         //RANDOM-VALUE
         String randomBNR = generateRandomString(6);
         String randomTRN = generateRandomString(25);
         String randomRID = generateRandomString(12);
         Long randomCRN = generateRandomNumeric(12);
         Long referenceId = generateRandomNumeric(12);
-//------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------
         //Payment Request
         PaymentRequest paymentRequestPass = new PaymentRequest(
                 6994, randomRID, randomCRN,ppi.getAMT()
