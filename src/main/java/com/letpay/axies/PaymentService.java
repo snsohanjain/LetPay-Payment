@@ -7,7 +7,6 @@ import com.mongodb.client.MongoDatabase;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.bson.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.security.NoSuchAlgorithmException;
@@ -22,8 +21,6 @@ import static com.letpay.axies.RandomAlphaNumeric.generateRandomString;
 public class PaymentService {
     private static final String  key = "axisbank12345678";
     private static final Logger LOGGER = Logger.getLogger(PaymentController.class);
-    @Autowired
-    private PaymentController paymentController;
 
     @PostMapping
     String getNewPaymentOrder(PPI ppi) throws NoSuchAlgorithmException {
