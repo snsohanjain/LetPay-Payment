@@ -14,7 +14,6 @@ public class PaymentRequest {
     private Integer CID;
     @JsonProperty("RID")
     //request_id
-
     private String RID;
     @JsonProperty("CRN")
     //uniqueCustomerReferenceNumber
