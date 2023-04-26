@@ -5,13 +5,13 @@
         <h1 style="color: #5556fd"><strong>LetPay</strong></h1>
         <br>
         <div class="form-group">
-            <input type="text" class="form-control" name="AMT" placeholder="Amount" required="required">
+            <input type="number" class="form-control" name="AMT" placeholder="Amount" required="required">
         </div>
         <div class="form-group">
             <input type="text" class="form-control" name="CustomerName" placeholder="Customer Name" required="required">
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="phoneNumber" placeholder="Phone Number" required="required">
+            <input type="number" class="form-control" name="phoneNumber" placeholder="Phone Number" required="required">
         </div>
         <div class="form-group">
             <input type="email" class="form-control" name="email" placeholder="Email Address" required="required">

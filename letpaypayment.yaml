@@ -29,7 +29,7 @@ spec:
             - containerPort: 8080
 
 ## RUN COMMAND
-##     kubectl apply -f letpaypayment-pod.yaml
+##     kubectl apply -f letpaypayment.yaml
 ## PORT FORWARD
 ##     kubectl port-forward pod/letpay 8000:8080
 

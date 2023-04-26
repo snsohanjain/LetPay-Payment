@@ -57,7 +57,7 @@ public class PaymentController {
                         ppi.getEmail(),ppi.getAMT()),"12345");
 
 //-------------------------------------------------------------------------------------------
-        //ENCRYPTED
+        //REQUEST
         System.out.println("REQUEST : " + paymentRequestPass);
         System.out.println();
         String encryptedResponse = EncryptionAndDecryptionMain.encrypt(paymentRequestPass.toString(),key);
@@ -71,12 +71,22 @@ public class PaymentController {
         //Checksum Response
         String checksum = EncryptionAndDecryptionMain.checkSum(encryptedResponse);
         System.out.println("Checksum Response: " + checksum);
+        System.out.println();
 //-----------------------------------------------------------------------------------------------
-        //PAYMENT RESPONSE
-        PaymentResponse paymentResponse = new PaymentResponse(
+        //MOCK
+        //PAYMENT RESPONSE FROM BANK
+        PaymentResponse paymentBankResponse = new PaymentResponse(
                 randomBNR,200,"Success",randomTRN, LocalDateTime.now(),
                 "UPI",randomRID,1.0, 6994,"UPI",randomCRN,
                 "INR",paymentRequestPass.getPPI().getAMT());
+        //Encrypted Bank Response
+        String encryptedBankResponse = EncryptionAndDecryptionMain.encrypt(paymentBankResponse.toString(),key);
+        System.out.println("ENCRYPTED BANK RESPONSE: " + encryptedBankResponse);
+        System.out.println();
+        //Decrypted Bank Response
+        String decryptedBankResponse = EncryptionAndDecryptionMain.decrypt(encryptedBankResponse,key);
+        System.out.println("DECRYPTED BANK RESPONSE: " + decryptedBankResponse);
+        System.out.println();
 //--------------------------------------------------------------------------------------------------
         //MONGODB
         MongoClient mongoClient = MongoClients.create(mongoAccess);
@@ -84,7 +94,7 @@ public class PaymentController {
         MongoCollection col = db.getCollection("allpayments");
 
 
-        Map<String, Object> paymentmap = MongoConfig.toMap(paymentRequestPass.getPPI(),paymentResponse);
+        Map<String, Object> paymentmap = MongoConfig.toMap(paymentRequestPass.getPPI(),paymentBankResponse);
         Document document = new Document(paymentmap);
         col.insertOne(document);
         LOGGER.info("PAYMENT REQUEST SUCCESS STORED IN MONGODB");

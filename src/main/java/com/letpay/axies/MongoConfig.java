@@ -1,10 +1,13 @@
 package com.letpay.axies;
 
+import org.springframework.stereotype.Component;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class MongoConfig {
+
     public final static String mongoAccess = "mongodb+srv://sohanjain:sohanjain@cluster0.byn9s0t.mongodb.net/?retryWrites=true&w=majority";
     public static Map toMap(PPI ppi, PaymentResponse paymentResponse) {
 
