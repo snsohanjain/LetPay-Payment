@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.letpay.axies.MongoConfig.mongoAccess;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/")
 public class PaymentRestController {
@@ -67,4 +68,44 @@ public class PaymentRestController {
         LOGGER.info("RETURNED ALL PAYMENTS");
         return documents;
     }
+    @GetMapping("/payments")
+    public List<Document> getAllPayments(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "100") int size) {
+
+        BasicConfigurator.configure();
+        LOGGER.info("GET ALL PAYMENTS");
+
+        MongoClient mongoClient = MongoClients.create(mongoAccess);
+        MongoDatabase database = mongoClient.getDatabase("payment");
+        MongoCollection<Document> collection = database.getCollection("allpayments");
+        List<Document> documents = new ArrayList<>();
+
+        // calculate the number of documents to skip based on the page and size parameters
+        int skip = page * size;
+
+        // limit the number of returned documents to the specified size (maximum 1000)
+        int limit = Math.min(size, 1000);
+
+        // find the documents in the collection using skip and limit
+        FindIterable<Document> iterable = collection.find().skip(skip).limit(limit);
+        for (Document document : iterable) {
+            Date date = document.getDate("localDateTime");
+            Instant instant = date.toInstant();
+            LocalDateTime localDatetime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+            String dateString = localDatetime.toString();
+            document.put("localDateTime", dateString);
+            Document paymentResponseDoc = document.get("PaymentResponse", Document.class);
+            Date date2 = paymentResponseDoc.getDate("localDateTime");
+            Instant instant2 = date2.toInstant();
+            LocalDateTime localDateTime2 = LocalDateTime.ofInstant(instant2, ZoneId.systemDefault());
+            String dateString2 = localDateTime2.toString();
+            paymentResponseDoc.put("localDateTime", dateString2);
+            document.put("PaymentResponse", paymentResponseDoc);
+            documents.add(document);
+        }
+        mongoClient.close();
+        LOGGER.info("RETURNED ALL PAYMENTS");
+        return documents;
+    }
+
 }
