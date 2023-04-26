@@ -2,6 +2,7 @@
 <html>
 <head>
     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
+<%--    <meta http-equiv="refresh" content="10;url=http://localhost:8080/payment">--%>
 </head>
 <style>
     body {
@@ -44,6 +45,25 @@
     </div>
     <h1>Success</h1>
     <p>We received your payment request;<br/> we'll be in touch shortly!</p>
+    <div class="container">
+        <h2>Payment Details</h2>
+        <p><strong>Reference ID:</strong> ${referenceId}</p>
+        <p><strong>Customer Name:</strong> ${customerName}</p>
+        <p><strong>Amount:</strong> <span class="amt">${amt}</span></p>
+    </div>
+    <p>You will be redirected in <span id="timer">15</span> seconds.</p>
+    <script>
+        var seconds = 15;
+        var timer = setInterval(function() {
+            var timerElement = document.getElementById('timer');
+            seconds--;
+            timerElement.textContent = seconds;
+            if (seconds <= 0) {
+                clearInterval(timer);
+                window.location.href = 'https://test.sohanjain.cloud/payment';
+            }
+        }, 1000);
+    </script>
 </div>
 </body>
 </html>
