@@ -25,7 +25,6 @@ import static com.letpay.axies.RandomAlphaNumeric.generateRandomString;
 @RequestMapping(path = "/")
 public class PaymentController {
     private static final String  key = "axisbank12345678";
-
     private static final Logger LOGGER = Logger.getLogger(PaymentController.class);
 
     @GetMapping

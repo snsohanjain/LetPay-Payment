@@ -24,6 +24,7 @@ public class PaymentService {
 
     @PostMapping
     String getNewPaymentOrder(PPI ppi) throws NoSuchAlgorithmException {
+
         BasicConfigurator.configure();
         LOGGER.info("CREATE A PAYMENT REQUEST");
 

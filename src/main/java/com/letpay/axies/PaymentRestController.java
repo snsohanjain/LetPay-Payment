@@ -31,7 +31,6 @@ public class PaymentRestController {
         BasicConfigurator.configure();
         LOGGER.info(ppi);
         paymentService.getNewPaymentOrder(ppi);
-
     }
 
     @GetMapping("/payments/all")
@@ -68,6 +67,7 @@ public class PaymentRestController {
         LOGGER.info("RETURNED ALL PAYMENTS");
         return documents;
     }
+
     @GetMapping("/payments")
     public List<Document> getAllPayments(@RequestParam(defaultValue = "0") int page,
                                          @RequestParam(defaultValue = "100") int size) {
@@ -103,8 +103,10 @@ public class PaymentRestController {
             document.put("PaymentResponse", paymentResponseDoc);
             documents.add(document);
         }
+
         mongoClient.close();
         LOGGER.info("RETURNED ALL PAYMENTS");
+
         return documents;
     }
 
