@@ -21,7 +21,6 @@ public class PPI {
 
 //    PPI=LP110S|anjali|anjalim541@gmail.com|9773865014|100.55
 
-
     @Override
     public String toString() {
         return referenceId +"|"+customerName + "|" + localDateTime + "|" +phoneNumber+ "|" + email + "|" + AMT;
